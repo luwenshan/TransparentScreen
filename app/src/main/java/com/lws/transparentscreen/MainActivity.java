@@ -1,8 +1,15 @@
 package com.lws.transparentscreen;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.WallpaperManager;
+import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+        findViewById(R.id.btn_video_wallpaper)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startVideoWallpaper();
+                    }
+                });
     }
 
     void checkSelfPermission() {
@@ -52,9 +66,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void startWallpaper() {
-        Intent pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
-        Intent chooser = Intent.createChooser(pickWallpaper, "选择");
-        startActivity(chooser);
+//        Intent pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
+//        Intent chooser = Intent.createChooser(pickWallpaper, "选择壁纸");
+        Intent intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
+        intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
+                new ComponentName(this.getApplicationContext(), CameraLiveWallpaper.class));
+        startActivity(intent);
     }
 
+    void startVideoWallpaper() {
+        Intent intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
+        intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
+                new ComponentName(this.getApplicationContext(), VideoLiveWallpaper.class));
+        startActivity(intent);
+    }
 }
